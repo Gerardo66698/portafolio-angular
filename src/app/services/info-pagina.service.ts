@@ -1,3 +1,4 @@
+import { InfoPagina } from './../interfaces/info-pagina.intreface';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -6,17 +7,32 @@ import { Injectable } from '@angular/core';
 })
 export class InfoPaginaService {
 
-  info:any={};
-  cargado=false;
+  info: InfoPagina = {};
+  cargada = false;
 
-  constructor( private http: HttpClient) {
+  equipo: any []= [];
+
+  constructor(private http: HttpClient) {
     //console.log('Sercio Cargado');
-  this.http.get('assets/data/data-pagina.json')
-  .subscribe(resp => {
+    this.CargarInfo();
+    this.CargarEquipo();
+  }
 
-    this.cargado=true;
-    this.info=resp;
-    console.log(resp);
-  });
+  private CargarInfo() {
+    //leer el archivo json
+    this.http.get('assets/data/data-pagina.json')
+      .subscribe((resp: InfoPagina) => {
+
+        this.cargada = true;
+        this.info = resp;
+      });
+  }
+
+  private CargarEquipo() {
+    this.http.get('https://angular-html-f80e3-default-rtdb.firebaseio.com/equipo.json')
+      .subscribe((resp: any) => {
+        this.equipo = resp;
+        console.log(resp);
+      });
   }
 }
